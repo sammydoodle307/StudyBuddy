@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+  <title>PHP - jquery ajax crop image before upload using croppie plugins</title>
+  <script src="http://demo.itsolutionstuff.com/plugin/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="http://demo.itsolutionstuff.com/plugin/croppie.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <link rel="stylesheet" href="http://demo.itsolutionstuff.com/plugin/croppie.css">
+</head>
+<body>
+
+
+<div class="col s12">
+  <div class="row">
+    <div class="col m4">
+      <div id="upload-demo" style="width:350px"></div>
+    </div>
+    <div class="col m4" style="padding-top:30px;">
+      <strong>Select Image:</strong>
+      <br/>
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>File</span>
+          <input type="file" id="upload" value="Choose a file" accept="image/*" "></div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text">
+          </div>
+        </div>
+      <br/>
+      <button class="btn upload-result">Upload Image</button>
+    </div>
+</div>
+      
+
+<script type="text/javascript">
+$uploadCrop = $('#upload-demo').croppie({
+    enableExif: true,
+    viewport: {
+        width: 200,
+        height: 200,
+        type: 'circle'
+    },
+    boundary: {
+        width: 300,
+        height: 300
+    }
+});
+
+
+$('#upload').on('change', function () { 
+   var reader = new FileReader();
+    reader.onload = function (e) {
+      $uploadCrop.croppie('bind', {
+         url: e.target.result
+      }).then(function(){
+         console.log('jQuery bind complete');
+      });
+      
+    }
+    reader.readAsDataURL(this.files[0]);
+});
+
+
+$('.upload-result').on('click', function (ev) {
+   $uploadCrop.croppie('result', {
+      type: 'canvas',
+      size: 'viewport'
+   }).then(function (resp) {
+   });
+});
+
+
+</script>
+
+
+</body>
+</html>

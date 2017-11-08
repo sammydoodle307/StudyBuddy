@@ -1,5 +1,6 @@
 $( document ).ready(function(){
   $(".button-collapse").sideNav();
+  $('.modal').modal();
 });
 
 firebase.auth().onAuthStateChanged(function(user) {
