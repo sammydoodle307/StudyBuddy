@@ -15,25 +15,37 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
+function updateProfile(storage) {
+  storage.getDownloadURL().then(function(url) {
+    console.log(url);
+    var user = firebase.auth().currentUser;
+    user.updateProfile({
+      photoURL: url
+    }).then(function() {
+      document.getElementById("profile-pic").src = user.photoURL;
+      console.log("Updated Photo URL");
+    });
+  });
+}
 
-$uploadCrop = $('#upload-demo').croppie({
+var uploadCrop = new Croppie(document.getElementById('upload-demo'), {
     enableExif: true,
     viewport: {
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
         type: 'square'
     },
     boundary: {
         width: 300,
         height: 300
-    }
+    },
+    enableOrientation: true
 });
-
 
 $('#upload').on('change', function () { 
    var reader = new FileReader();
     reader.onload = function (e) {
-      $uploadCrop.croppie('bind', {
+      uploadCrop.bind({
          url: e.target.result
       }).then(function(){
          console.log('jQuery bind complete');
@@ -45,9 +57,19 @@ $('#upload').on('change', function () {
 
 
 $('.upload-result').on('click', function (ev) {
-   $uploadCrop.croppie('result', {
-      type: 'canvas',
+   uploadCrop.result({
+      type: 'blob',
       size: 'viewport'
    }).then(function (resp) {
+    console.log(resp);
+    storageRef.child('users/' + uid + '/profile.png').put(resp).then(function(snapshot) {
+      console.log('Uploaded profile pic!');
+      updateProfile(storageRef.child('users/' + uid + '/profile.png'));
+    });
    });
 });
+
+
+function rotate(deg) {
+  uploadCrop.rotate(deg);
+}
