@@ -3,11 +3,44 @@ nav .brand-logo {
 }
 
 @media only screen and (min-width: 994px) {
-   nav .brand-logo {
-      padding-left: 20px;
+   nav #logo-text {
+      padding-left: 75px;
+   }
+}
+
+@media only screen and (max-width: 993px) and (min-width: 602px) {
+   nav #logo-text {
+      padding-left: 60px;
+   }
+   nav #logo-img {
+      padding-right: 190px;
+   }
+}
+
+@media only screen and (max-width: 601px) {
+   nav #logo-text {
+      visibility: hidden;
+   }
+   nav #logo-img {
+      padding: 4px 0 4px 0;
    }
 }
 
 .rotate-btn {
    width: 100%;
+}
+
+#profile-modal {
+   min-height: 420px;
+}
+
+.brand-logo {
+   height: 100%;
+}
+
+#logo-img {
+   height: 55px;
+   padding-top: 7px;
+   padding-left: 20px; 
+   /*margin-top: 10%;*/
 }

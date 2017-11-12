@@ -7,12 +7,20 @@ firebase.auth().onAuthStateChanged(function(user) {
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
     var providerData = user.providerData;
-   // document.getElementById("account-info").innerHTML += "<p>displayName: " + displayName + "</p>";
-   // document.getElementById("account-info").innerHTML += "<p>email: " + email + "</p>";
-   // document.getElementById("account-info").innerHTML += "<p>User ID: " + uid + "</p>";
-   // document.getElementById("account-info").innerHTML += "<p>photoURL: <img style='width:50%' src='" + photoURL + "'></p>";
    document.getElementById("profile-pic").src = photoURL;
   }
+});
+
+$( document ).ready(function(){
+  $('.modal').modal({
+    ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+      $("#croppie-container").show();
+      initCroppie();
+    },
+    complete: function() {
+      $("#croppie-container").hide();
+    }
+  });
 });
 
 function updateProfile(storage) {
@@ -28,48 +36,72 @@ function updateProfile(storage) {
   });
 }
 
-var uploadCrop = new Croppie(document.getElementById('upload-demo'), {
+var uploadCrop;
+
+function initCroppie() {
+  $('#upload').off("change");
+  $('.upload-result').off("click");
+  if (uploadCrop) {
+    uploadCrop.destroy();
+  }
+
+  var width = Math.min($("#croppie-container").width(), 300);
+  uploadCrop = new Croppie(document.getElementById('upload-demo'), {
     enableExif: true,
     viewport: {
-        width: 250,
-        height: 250,
+        width: width - 50,
+        height: width - 50,
         type: 'square'
     },
     boundary: {
-        width: 300,
-        height: 300
+        width: width,
+        height: width
     },
-    enableOrientation: true
-});
+    enableOrientation: true,
+    showZoomer: false
+  });
 
-$('#upload').on('change', function () { 
-   var reader = new FileReader();
-    reader.onload = function (e) {
-      uploadCrop.bind({
-         url: e.target.result
-      }).then(function(){
-         console.log('jQuery bind complete');
-      });
-      
+  $('#upload').on('change', function () { 
+    if (this.files[0] != undefined) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        uploadCrop.bind({
+          url: e.target.result
+        }).then(function(){
+           // console.log('jQuery bind complete');
+        });
+      }
+      reader.readAsDataURL(this.files[0]);
     }
-    reader.readAsDataURL(this.files[0]);
-});
+  });
+
+  $('.upload-result').on('click', function (ev) {
+     uploadCrop.result({
+        type: 'blob',
+        size: 500
+     }).then(function (resp) {
+      console.log(resp);
+      document.getElementById("profile-pic").src = URL.createObjectURL(resp);
+      storageRef.child('users/' + uid + '/profile.png').put(resp).then(function(snapshot) {
+        console.log('Uploaded profile pic!');
+        updateProfile(storageRef.child('users/' + uid + '/profile.png'));
+      });
+     });
+  });
+
+  $('#upload').trigger("change");
+}
 
 
-$('.upload-result').on('click', function (ev) {
-   uploadCrop.result({
-      type: 'blob',
-      size: 'viewport'
-   }).then(function (resp) {
-    console.log(resp);
-    storageRef.child('users/' + uid + '/profile.png').put(resp).then(function(snapshot) {
-      console.log('Uploaded profile pic!');
-      updateProfile(storageRef.child('users/' + uid + '/profile.png'));
-    });
-   });
+addEvent(window, "resize", function(event) {
+  initCroppie();
 });
+
+$("#croppie-container").hide();
 
 
 function rotate(deg) {
   uploadCrop.rotate(deg);
 }
+
+
