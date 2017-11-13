@@ -39,7 +39,7 @@
     <!-- </div> -->
 
     <div class="row container">
-      <div class="col l5 s12">
+      <div class="col l5 m8 offset-m2 s12">
         <div class="card">
           <div class="card-image">
             <img id="profile-pic" src="">
@@ -63,11 +63,19 @@
 
               <div id="croppie-container" class="col s12">
                 <div id="upload-demo" style=""></div>
+                <div class="row">
+                  <div class="col m3 s6 offset-m3">
+                    <div class="rotate-btn btn center-align" onclick="uploadCrop.rotate(-90)">
+                      <i class="material-icons">rotate_left</i>
+                    </div>
+                  </div>
+                  <div class="col m3 s6">
+                    <div class="rotate-btn btn center-align" onclick="uploadCrop.rotate(90)">
+                      <i class="material-icons">rotate_right</i>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="col m3 s6 offset-m3"><div class="rotate-btn btn center-align" onclick="rotate(-90)"><i class="material-icons">rotate_left</i></div></div>
-              <div class="col m3 s6"><div class="rotate-btn btn center-align" onclick="rotate(90)"><i class="material-icons">rotate_right</i></div></div>
-
-              
               
 
             </div>
@@ -83,45 +91,94 @@
       <div class="col l7 s12">
         <h5 class="center">Profile Page</h5>
         <div class="card">
-          <div class="card-content">
-            <!-- <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p> -->
-          </div>
           <div class="card-tabs">
             <ul class="tabs tabs-fixed-width">
-              <li class="tab"><a href="#test4">Bio</a></li>
-              <li class="tab"><a class="active" href="#test5">Contact Information</a></li>
-              <li class="tab"><a href="#test6">Settings</a></li>
+              <li class="tab"><a class="active" href="#info">Profile Information</a></li>
+              <li class="tab"><a href="#settings">Settings</a></li>
             </ul>
           </div>
           <div class="card-content grey lighten-4">
-            <div id="test4">Bio</div>
-            <div id="test5">Contact Information</div>
-            <div id="test6">Settings</div>
+            <div id="info">
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="first" type="text" class="validate">
+                  <label for="first">First Name *</label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="last" type="text" class="validate">
+                  <label for="last">Last Name *</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m8 s12">
+                  <div class="input-field s12">
+                    <input disabled value="" id="email" type="email" class="validate">
+                    <label for="email">Email *</label>
+                  </div>
+                  <div class="input-field s12">
+                    <input value="" id="phone" type="tel" class="validate" onkeypress="return numberPressed(event)">
+                    <label for="phone">Phone Number *</label>
+                  </div>
+                </div>
+                <div class="col m4 s12">
+                  <label>Preferred Contact Method *</label>
+                  <form action="#" id="preferred">
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_email" value="pref_email" checked/>
+                      <label for="pref_email">Email</label>
+                    </p>
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_text" value="pref_text"/>
+                      <label for="pref_text">Text</label>
+                    </p>
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_call" value="pref_call"/>
+                      <label for="pref_call">Call</label>
+                    </p>
+                  </form>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <select id="year" class="validate">
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="Freshman">Freshman</option>
+                    <option value="Sophmore">Sophmore</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Senior">Senior</option>
+                  </select>
+                  <label>Year *</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea id="bio" class="materialize-textarea validate"></textarea>
+                  <label for="bio">Biography *</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12">
+                  <label>* Required</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l6 offset-l6 m5 offset-m7 s12">
+                  <div class="btn" id="update-info" onclick="updateInfo()">Update Info</div>
+                </div>
+              </div>
+            </div>
+            <div id="settings">Settings</div>
           </div>
         </div>
       </div>
-      
     </div>
-
 
     <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-auth.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyAwwg84Hj6EpSMc7RDxI3FGlzMEQojKNWo",
-        authDomain: "studybuddy-19f01.firebaseapp.com",
-        databaseURL: "https://studybuddy-19f01.firebaseio.com",
-        projectId: "studybuddy-19f01",
-        storageBucket: "studybuddy-19f01.appspot.com",
-        messagingSenderId: "665903783375"
-      };
-      firebase.initializeApp(config);
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="js/croppie.min.js"></script>
-    <script src="js/ResizeSensor.js"></script>
     <script src="js/main.js"></script>
     <script src="js/profile.js"></script>
   </body>
