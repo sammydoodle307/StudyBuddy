@@ -22,7 +22,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     var docRef = db.collection("users").doc(user.uid);
     docRef.get().then(function(doc) {
-      console.log(doc.exists);
       if (doc.exists) {
         console.log("Document data:", doc.data());
         if (typeof authChange == 'function') { 

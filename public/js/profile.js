@@ -52,6 +52,8 @@ function loadProfile(storage) {
     }).then(function() {
       document.getElementById("profile-pic").src = user.photoURL;
       console.log("Updated Photo URL");
+      Materialize.Toast.removeAll();
+      Materialize.toast("Uploaded Successfully", 1000);
     });
   });
 }
@@ -86,6 +88,7 @@ function updateInfo() {
       bio: info["bio"]
     }).then(function() {
       console.log("Updated info!");
+      Materialize.toast("Info Updated!", 1000);
     });
   }
 }
@@ -137,6 +140,7 @@ function initCroppie() {
   });
 
   $('.upload-result').on('click', function (ev) {
+    Materialize.toast("Uploading Image... (Do not close page)");
     var uid = firebase.auth().currentUser.uid;
     uploadCrop.result({
       type: 'blob',
