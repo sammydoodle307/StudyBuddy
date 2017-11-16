@@ -52,3 +52,13 @@ nav .brand-logo {
 #search-label {
    margin-top:-12px;
 }
+
+.progress {
+   visibility: hidden;
+}
+
+/*input[type='text'],
+input[type='number'],
+textarea {
+  font-size: 16px;
+}*/

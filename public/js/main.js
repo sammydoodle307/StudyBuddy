@@ -16,16 +16,16 @@ $( document ).ready(function(){
 });
 
 var storageRef = firebase.storage().ref();
-var db = firebase.firestore();
+var db = firebase.database();
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    var docRef = db.collection("users").doc(user.uid);
-    docRef.get().then(function(doc) {
-      if (doc.exists) {
-        console.log("Document data:", doc.data());
+    var dbRef = db.ref('users/' + user.uid);
+    dbRef.once('value').then(function(snapshot) {
+      if (snapshot.exists()) {
+        console.log("Document data:", snapshot.val());
         if (typeof authChange == 'function') { 
-          authChange(user.uid, doc.data());
+          authChange(user.uid, snapshot.val());
         }
       } else {
         if (window.location.pathname.toString() != "/profile.html") {

@@ -79,7 +79,7 @@ function updateInfo() {
   if (!blankValue) {
     var user = firebase.auth().currentUser;
     console.log(user.uid)
-    db.collection("users").doc(user.uid).set({
+    db.ref('users/' + user.uid).set({
       first: info["first"],
       last: info["last"],
       preferred: info["preferred"],

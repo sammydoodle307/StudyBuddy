@@ -2,12 +2,16 @@ import requests
 from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import db
 
 # Use the application default credentials
+
 cred = credentials.Certificate("/Users/jackv/serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://studybuddy-19f01.firebaseio.com/'
+})
+# db = firestore.client()
+ref = db.reference('courses')
 
 courses = {}
 
@@ -66,7 +70,7 @@ while len(courses_soup) > 0:
                }
             }})
 
-
-for key in courses:
-   doc_ref = db.collection(u'courses').document(key)
-   doc_ref.set(courses[key])
+ref.set(courses)
+# for key in courses:
+#    doc_ref = db.collection(u'courses').document(key)
+#    doc_ref.set(courses[key])
