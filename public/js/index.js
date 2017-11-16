@@ -101,28 +101,57 @@ function addRow(table, course) {
 }
 
 function chipAdded(chip) {
-  if (isNaN(chip.tag)) {
-    $('.chips-autocomplete').material_chip({
-      placeholder: 'Curriculum Name',
-      secondaryPlaceholder: 'Course Number',
-      data: [{
-        tag: chip['tag'].toUpperCase().replace(" ", ""),
-      }],
-      autocompleteOptions: {
-        data: course_data[chip.tag.toUpperCase().replace(" ", "")],
-        limit: 10,
-        minLength: 1
+  var chips = chip.tag.split(" ");
+  if (chips.length > 1) {
+    if (isNaN(chips[0])) {
+      var start = 0;
+      if (isNaN(chips[1])) {
+        var initialChips = [{tag: chips[0].toUpperCase() + " " + chips[1].toUpperCase()}];
+        start = 1;
+      } else {
+        var initialChips = [{tag: chips[0].toUpperCase()}];
       }
-    });
+      
+      for (var i = start; i < chips.length; i++) {
+        if (!isNaN(chips[i])) {
+          initialChips.push({tag: chips[i]});
+        }
+      }
+      $('.chips-autocomplete').material_chip({
+        placeholder: 'Curriculum Name',
+        secondaryPlaceholder: 'Course Number',
+        data: initialChips,
+        autocompleteOptions: {
+          data: course_data[chip.tag.toUpperCase()],
+          limit: 10,
+          minLength: 1
+        }
+      });
+    }
   } else {
-    // Test if first is num
+    if (isNaN(chip.tag)) {
+      $('.chips-autocomplete').material_chip({
+        placeholder: 'Curriculum Name',
+        secondaryPlaceholder: 'Course Number',
+        data: [{
+          tag: chip['tag'].toUpperCase().replace(" ", ""),
+        }],
+        autocompleteOptions: {
+          data: course_data[chip.tag.toUpperCase().replace(" ", "")],
+          limit: 10,
+          minLength: 1
+        }
+      });
+    } else {
+      // Test if first is num
+    }
   }
   updateSearch();
   window.setTimeout(focusSearch, 50);
 }
 
 function focusSearch() {
-  $("#course-add > input").focus()
+  $("#course-add > input").focus();
 }
 
 function chipDeleted(chip) {

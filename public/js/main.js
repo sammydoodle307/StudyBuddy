@@ -11,7 +11,9 @@ firebase.initializeApp(config);
 
 
 $( document ).ready(function(){
-  $(".button-collapse").sideNav();
+  $(".button-collapse").sideNav({
+    draggable: true,
+  });
   $('select').material_select();
 });
 

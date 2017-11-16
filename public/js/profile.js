@@ -11,6 +11,15 @@ $( document ).ready(function(){
   $("#croppie-container").hide();
 });
 
+// document.getElementById("profile-pic-container").style.height = document.getElementById("profile-pic-container").offsetWidth + "px";
+
+$("#profile-pic").one("load", function() {
+  // document.getElementById("profile-preloader").style.display = "none";
+  document.getElementById("profile-pic").style.display = "block";
+  document.getElementById("profile-pic-container").style.paddingTop = "0";
+})
+
+
 function authChange(uid, data) {
   if (data == undefined) {
     var user = firebase.auth().currentUser;
@@ -99,7 +108,6 @@ $("#year").on("change", function() {
   document.getElementById("year").classList.remove("invalid");
   document.getElementById("year").classList.add("valid");
   $('select').material_select();
-  console.log("Test")
 });
 
 function initCroppie() {
@@ -113,13 +121,13 @@ function initCroppie() {
   uploadCrop = new Croppie(document.getElementById('upload-demo'), {
     enableExif: true,
     viewport: {
-        width: width - 50,
-        height: width - 50,
+        width: width - 100,
+        height: width - 100,
         type: 'square'
     },
     boundary: {
-        width: width,
-        height: width
+        width: width - 50,
+        height: width - 50
     },
     enableOrientation: true,
     showZoomer: false
