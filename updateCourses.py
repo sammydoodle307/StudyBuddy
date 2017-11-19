@@ -11,7 +11,7 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://studybuddy-19f01.firebaseio.com/'
 })
 # db = firestore.client()
-ref = db.reference('courses')
+ref = db.reference('curriculum_search')
 
 courses = {}
 
@@ -26,7 +26,7 @@ headers = {"Authorization":"Bearer CA102B39-4731-4782-BF86-2A6C0EA80FD4"}
 r = requests.get('https://ws.admin.washington.edu/student/v5/course', params=payload, headers=headers)
 soup = BeautifulSoup(r.text, 'html.parser')
 
-page_num = 1001
+page_num = 1
 courses_soup = soup.findAll("li")
 while len(courses_soup) > 0:
    payload = {
@@ -40,8 +40,8 @@ while len(courses_soup) > 0:
    r = requests.get('https://ws.admin.washington.edu/student/v5/course', params=payload, headers=headers)
    soup = BeautifulSoup(r.text, 'html.parser')
    courses_soup = soup.findAll("li")
-   page_num += 1000
    print page_num
+   page_num += 1000
    for course_soup in courses_soup:
       # print courses_soup
       name = course_soup.find("span", class_="CourseTitleWithCourseTitleLong").string
@@ -52,24 +52,10 @@ while len(courses_soup) > 0:
 
       # if (courses[curriculum] == undefined)
       if curriculum in courses:
-         courses[curriculum][number] = {
-            u"name": name,
-            u"curriculum": curriculum,
-            u"quarter": quarter,
-            u"year": year,
-            u"number": number
-         }
+         courses[curriculum] = True
       else:
-         courses.update({curriculum: {
-            number : {
-                  u"name": name,
-                  u"curriculum": curriculum,
-                  u"quarter": quarter,
-                  u"year": year,
-                  u"number": number
-               }
-            }})
-
+         courses.update({curriculum: True})
+# print courses
 ref.set(courses)
 # for key in courses:
 #    doc_ref = db.collection(u'courses').document(key)

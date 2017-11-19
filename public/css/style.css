@@ -53,10 +53,6 @@ nav .brand-logo {
    margin-top:-12px;
 }
 
-.progress {
-   visibility: hidden;
-}
-
 input[type='text'],
 input[type='number'],
 input,
@@ -75,4 +71,80 @@ textarea {
 .chips .input {
    font-size: 16px;
    width: 125px !important;
+}
+
+.autocomplete-content {
+   position: absolute;
+   width: 100%;
+}
+
+.class-change-btn {
+   -webkit-touch-callout: none; /* iOS Safari */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+   cursor: pointer;
+   padding-right: 20px;
+}
+
+.table-curr, .table-num, .table-add {
+   width: 16.6666667%
+}
+
+.table-name {
+   width: 50%;
+}
+
+@media only screen and (max-width: 601px) { 
+   td {
+      font-size: 10px;
+   }
+}
+
+@media only screen and (max-width: 992px) {
+   #addCourse {
+       width: 95%;
+   }
+}
+
+#addCourseBtn {
+   width: 100%;
+}
+
+.collapsible-header {
+   justify-content: space-between;
+}
+
+.collapsible li.disabled .collapsible-body {
+    display: none !important; /*or using id of the app to avoid the use of !important*/
+}
+
+.collapsible li.disabled .collapsible-header {
+    background: #E0E0E0;
+}
+
+.class-remove-btn {
+   float: right;
+}
+
+.class-toggle {
+   float: left;
+}
+
+.trunc-name {
+   width: calc(100% - 113px);
+}
+
+.modal.modal-fixed-footer .modal-content{
+   overflow-y: hidden;
+}
+
+.collection > .collection-item.avatar > .title {
+   font-size: 14px;
+}
+
+.collection > .collection-item.avatar > p {
+   font-size: 12px;
 }

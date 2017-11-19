@@ -11,14 +11,10 @@ $( document ).ready(function(){
   $("#croppie-container").hide();
 });
 
-// document.getElementById("profile-pic-container").style.height = document.getElementById("profile-pic-container").offsetWidth + "px";
-
 $("#profile-pic").one("load", function() {
-  // document.getElementById("profile-preloader").style.display = "none";
   document.getElementById("profile-pic").style.display = "block";
   document.getElementById("profile-pic-container").style.paddingTop = "0";
 })
-
 
 function authChange(uid, data) {
   if (data == undefined) {
@@ -56,6 +52,13 @@ function loadProfile(storage) {
   storage.getDownloadURL().then(function(url) {
     console.log(url);
     var user = firebase.auth().currentUser;
+    db.ref("shared_data/public_data/" + user.uid).update({
+      photoURL: url
+    });
+    db.ref("users/" + user.uid).update({
+      photoURL: url
+    });
+
     user.updateProfile({
       photoURL: url
     }).then(function() {
@@ -64,10 +67,13 @@ function loadProfile(storage) {
       Materialize.Toast.removeAll();
       Materialize.toast("Uploaded Successfully", 1000);
     });
+
+    db.ref("")
   });
 }
 
 function updateInfo() {
+  var user = firebase.auth().currentUser;
   var info = {}
   info["first"] = document.getElementById("first").value;
   info["last"] = document.getElementById("last").value;
@@ -75,6 +81,14 @@ function updateInfo() {
   info["phone"] = document.getElementById("phone").value;
   info["year"] = document.getElementById("year").value;
   info["bio"] = document.getElementById("bio").value;
+  info["email"] = user.email;
+
+  var public_data = {}
+  public_data["first"] = info["first"];
+  public_data["last"] = info["last"];
+  public_data["year"] = info["year"];
+  public_data["bio"] = info["bio"];
+
   blankValue = false;
   for (var key in info) {
     var value = info[key];
@@ -84,21 +98,15 @@ function updateInfo() {
     }
   }
   $('select').material_select();
-
   if (!blankValue) {
     var user = firebase.auth().currentUser;
     console.log(user.uid)
-    db.ref('users/' + user.uid).set({
-      first: info["first"],
-      last: info["last"],
-      preferred: info["preferred"],
-      phone: info["phone"],
-      year: info["year"],
-      bio: info["bio"]
-    }).then(function() {
+    db.ref('users/' + user.uid).update(info).then(function() {
       console.log("Updated info!");
       Materialize.toast("Info Updated!", 1000);
     });
+
+    db.ref('shared_data/public_data/' + user.uid).update(public_data);
   }
 }
 
@@ -199,4 +207,3 @@ function phoneFormat(input){
   }
   return input; 
 }
-

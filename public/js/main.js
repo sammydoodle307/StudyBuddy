@@ -19,14 +19,16 @@ $( document ).ready(function(){
 
 var storageRef = firebase.storage().ref();
 var db = firebase.database();
+var uid;
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     var dbRef = db.ref('users/' + user.uid);
     dbRef.once('value').then(function(snapshot) {
-      if (snapshot.exists()) {
+      if (snapshot.exists() && snapshot.val().email != undefined) {
         console.log("Document data:", snapshot.val());
         if (typeof authChange == 'function') { 
+          uid = user.uid;
           authChange(user.uid, snapshot.val());
         }
       } else {
@@ -37,6 +39,16 @@ firebase.auth().onAuthStateChanged(function(user) {
           if (typeof authChange == 'function') { 
             authChange(user.uid, undefined);
           }
+          db.ref("users/" + user.uid + "/photoURL").once("value").then(function(snapshot) {
+            if (!snapshot.exists()) {
+              db.ref("users/" + user.uid).update({
+                photoURL: user.photoURL
+              })
+              db.ref("shared_data/public_data/" + user.uid).update({
+                photoURL: user.photoURL
+              })
+            }
+          });
         }
       }
     })
