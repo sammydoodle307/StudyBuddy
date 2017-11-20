@@ -20,19 +20,33 @@ $(document).ready(function(){
   $('#confirmRemoveCourse').modal();
   $('#userInfo').modal({
     ready: function(modal, trigger) {
-      
-
+      var ch = $('.carousel-item').height();
+      $(".carousel-item").css({'max-width':ch/2+'px'});
+      $(".carousel-item").css({"left":"calc(50% - " + ch/4 + "px)"});
       $('.carousel.carousel-slider').carousel({
         duration: 200,
         fullWidth: true,
         indicators: false,
         noWrap: false,
-        padding: 200,
+        padding: 300,
       });
       $('.carousel.carousel-slider').carousel("set", carouselIndex);
     }
   });
+
+  // var string1 = "1C2jKe4RaWeMzu7CYElAb9CDwWm3";
+  // var string2 = "3mkYuuWX2JUfpspI31G9RW65DKO2";
+  // console.log(combineStrings(string1, string2));
+  // console.log(combineStrings(string2, string1));
 });
+
+function combineStrings(string1, string2) {
+  if (string1 < string2) {
+    return (string1 + string2);
+  } else {
+    return (string2 + string1);
+  }
+}
 
 function authChange(uid, data) {
   console.log(uid);
@@ -235,7 +249,6 @@ function updateInfoModal(openModal) {
           var bio = document.createElement("p");
           bio.classList = "flow-text";
           bio.id = userId + "_bio";
-          // bio.innerHTML = "Nam luctus ultrices magna, non vulputate tortor tristique sit amet. Fusce id ex mauris. Integer sed eros ligula. Nam a nulla nec ipsum feugiat lobortis. Etiam consequat sem eu ipsum laoreet, non interdum arcu mollis. Quisque vitae dui tincidunt amet.";
 
           closeIconBtn.appendChild(closeIcon);
           cardImage.appendChild(closeIconBtn);
@@ -245,10 +258,7 @@ function updateInfoModal(openModal) {
           cardImage.appendChild(addBtn);
           cardImage.appendChild(cardImgElement)
           card.appendChild(cardImage);
-         
-          // title.appendChild(firstName);
-          // title.innerHTML += " ";
-          // title.appendChild(lastName);
+          
           cardContent.appendChild(title);
           cardContent.appendChild(year);
           cardContent.appendChild(bio);
@@ -289,9 +299,6 @@ function updateInfoModal(openModal) {
         $("#userInfo").modal("open");
       }
 
-      // var ch = $('.card').height();
-      // $(".card").css({'width':ch+'px'});
-
       if(usersToUpdate.length < 1) {
         $("#userInfo").modal("close");
       }
@@ -315,12 +322,15 @@ function disableUser(passedThis) {
   }
   // $('#userInfo').modal('close');
   db.ref("user_courses/" + courseId + "/" + uid + "/" + userId).set(true).then(function() {
+    var ch = $('.carousel-item').height();
+    $(".carousel-item").css({'max-width':ch/2+'px'});
+    $(".carousel-item").css({"left":"calc(50% - " + ch/4 + "px)"});
     $('.carousel.carousel-slider').carousel({
         duration: 200,
         fullWidth: true,
         indicators: false,
         noWrap: false,
-        padding: 200,
+        padding: 300,
     });
     $('.carousel.carousel-slider').carousel("set", carouselIndex);
   });
@@ -333,7 +343,6 @@ function hideUser() {
 function addUser() {
   disableUser(this);
 }
-
 
 $("#addCourseBtn").one("click", function() {
   db.ref('curriculum_search').once("value").then(function(snapshot) {
@@ -428,7 +437,6 @@ function deleteConfirmed() {
   Materialize.toast("Removed course: " + courseData.replace("-", " ").replace("_", " "), 1000);
 }
 
-var first = true;
 function coursesUpdated(data, openedId) {
   var classlist = document.getElementById("class-list");
   classlist.innerHTML = "";
