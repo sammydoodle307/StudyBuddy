@@ -161,6 +161,7 @@ textarea {
 .carousel.carousel-slider .carousel-fixed-item {
    height: 100%;
    bottom: 0;
+   z-index: 0;
 }
 
 .carousel.carousel-slider {
@@ -173,10 +174,10 @@ textarea {
    }
 }
 
-.carousel-item > div {
+/*.carousel-item > div {
    margin-left: 10%;
    margin-right: 10%
-}
+}*/
 
 #userInfo {
    height: 80%;
@@ -188,7 +189,7 @@ textarea {
 
 .modal > .modal-content {
    height:100%;
-   padding: 0;
+   /*padding: 0;*/
 }
 
 .carousel-item {
@@ -223,3 +224,20 @@ textarea {
    z-index: 10;
    cursor: pointer;
 }
+
+.hideUser {
+   position: absolute;
+   left: 30px;
+   bottom: -20px;
+   z-index: 10;
+   cursor: pointer;
+}
+
+.addUser {
+   position: absolute;
+   right: 30px;
+   bottom: -20px;
+   z-index: 10;
+   cursor: pointer;
+}
+

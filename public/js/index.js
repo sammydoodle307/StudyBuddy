@@ -27,11 +27,7 @@ $(document).ready(function(){
         fullWidth: true,
         indicators: false,
         noWrap: false,
-        // onCycleTo: function (ele, dragged) {
-        //   console.log(ele);
-        //   console.log($(ele).index()); // the slide's index
-        //   console.log(dragged);
-        // }
+        padding: 200,
       });
       $('.carousel.carousel-slider').carousel("set", carouselIndex);
     }
@@ -58,10 +54,6 @@ function authChange(uid, data) {
         var user_data = snapshot.val();
         var bodyElement = document.getElementById(snapshot.key + "_list").children[1];
         bodyElement.innerHTML = "";
-        var usersLabel = document.createElement("h5");
-        usersLabel.classList = "center";
-        usersLabel.innerHTML = "Classmates";
-        bodyElement.appendChild(usersLabel);
         
         // TODO No Classmates
 
@@ -70,10 +62,13 @@ function authChange(uid, data) {
         var collection = document.createElement("ul");
         collection.classList = "collection";
 
+
+        var disabledUsers = user_data[uid];
+
         var usersToUpdate = [];
         index = 0;
         for (var userId in user_data) {
-          if (userId != uid) {
+          if (userId != uid && (disabledUsers == undefined || disabledUsers[userId] == undefined)) {
             var avatarItem = document.createElement("li");
             avatarItem.classList = "collection-item avatar";
             var img = document.createElement("img");
@@ -90,7 +85,7 @@ function authChange(uid, data) {
             secondaryContent.dataset.classId = snapshot.key;
             secondaryContent.dataset.userIndex = index;
             index++;
-            secondaryContent.onclick = userInfoClicked;
+            // secondaryContent.onclick = userInfoClicked;
             avatarItem.appendChild(img);
             avatarItem.appendChild(title);
             avatarItem.appendChild(content);
@@ -99,8 +94,20 @@ function authChange(uid, data) {
             usersToUpdate.push(userId);
           }
         }
+        if (usersToUpdate.length == 0) {
+          var noUser = document.createElement("li");
+          noUser.classList = "collection-item center";
+          noUser.innerHTML = "<div class='chip'>No New Classmates</div>";
+          collection.appendChild(noUser);
+        } else {
+          var usersLabel = document.createElement("h5");
+          usersLabel.classList = "center";
+          usersLabel.innerHTML = "New Classmates";
+          bodyElement.appendChild(usersLabel);
+        }
         collectionContainer.appendChild(collection);
         bodyElement.appendChild(collectionContainer);
+        $('.secondary-content').on("click touchstart", userInfoClicked);
 
         for (var i = 0; i < usersToUpdate.length; i++) {
           var usersToUpdateID = usersToUpdate[i];
@@ -122,6 +129,7 @@ function authChange(uid, data) {
             });
           });
         }
+        updateInfoModal();
       });
     }
 
@@ -154,44 +162,65 @@ function updateSwitch(id, checked) {
 }
 
 var carouselIndex;
+var cidInfoPopup;
 function userInfoClicked() {
-  var cid = this.dataset.classId;
+  cidInfoPopup = this.dataset.classId;
   carouselIndex = this.dataset.userIndex;
-  if (cid in user_courses) {
-    db.ref('user_courses/' + cid).on('value', function(snapshot, cid) {
+  updateInfoModal(true);
+}
+
+function updateInfoModal(openModal) {
+  if (cidInfoPopup in user_courses) {
+    db.ref('user_courses/' + cidInfoPopup).once('value', function(snapshot) {
       // console.log(snapshot.key, snapshot.val());
+
       $('.carousel.carousel-slider').carousel("destroy");
       $(".carousel-item").each(function(i) {
         this.remove();
       })
       var user_data = snapshot.val();
+      var disabledUsers = user_data[uid];
       var usersToUpdate = [];
-
 
       var carouselContainer = document.getElementById("infoCarousel");
       var index = 0;
       for (var userId in user_data) {
-        if (userId != uid) {
+        if (userId != uid && (disabledUsers == undefined || disabledUsers[userId] == undefined)) {
           usersToUpdate.push(userId);
-          console.log(userId);
           var carouselItem = document.createElement("div");
           carouselItem.href = "#one";
           carouselItem.classList = "carousel-item";
           if (index == carouselIndex) {
             carouselItem.classList += " active";
-            console.log("Active");
           }
-          index++;
           var card = document.createElement("div");
           card.classList = "card";
           var cardImage = document.createElement("div");
           cardImage.classList = "card-image";
+          
           var closeIconBtn = document.createElement("a");
-          closeIconBtn.classList = "infoClose btn-floating btn-large waves-effect waves-light red"
-          // closeIconBtn.onclick = closeInfo;
+          closeIconBtn.classList = "infoClose btn-floating btn-large waves-effect waves-light purple";
           var closeIcon = document.createElement("i");
           closeIcon.classList = "material-icons small right";
           closeIcon.innerHTML = "close";
+          var hideBtn = document.createElement("a");
+          hideBtn.classList = "hideUser btn-floating btn-large waves-effect waves-light red";
+          hideBtn.dataset.userId = userId;
+          hideBtn.dataset.courseId = snapshot.key;
+          hideBtn.dataset.index = index;
+          var hideIcon = document.createElement("i");
+          hideIcon.classList = "material-icons small right";
+          hideIcon.innerHTML = "close";
+          var addBtn = document.createElement("a");
+          addBtn.classList = "addUser btn-floating btn-large waves-effect waves-light green";
+          addBtn.dataset.userId = userId;
+          addBtn.dataset.courseId = snapshot.key;
+          addBtn.dataset.index = index;
+          index++;
+          var addIcon = document.createElement("i");
+          addIcon.classList = "material-icons small right";
+          addIcon.innerHTML = "check";
+         
           var cardImgElement = document.createElement("img");
           cardImgElement.src = "defaultprofile.jpg";
           cardImgElement.id = userId + "_img"
@@ -208,8 +237,12 @@ function userInfoClicked() {
           bio.id = userId + "_bio";
           // bio.innerHTML = "Nam luctus ultrices magna, non vulputate tortor tristique sit amet. Fusce id ex mauris. Integer sed eros ligula. Nam a nulla nec ipsum feugiat lobortis. Etiam consequat sem eu ipsum laoreet, non interdum arcu mollis. Quisque vitae dui tincidunt amet.";
 
-          closeIconBtn.appendChild(closeIcon)
+          closeIconBtn.appendChild(closeIcon);
           cardImage.appendChild(closeIconBtn);
+          hideBtn.appendChild(hideIcon);
+          cardImage.appendChild(hideBtn);
+          addBtn.appendChild(addIcon);
+          cardImage.appendChild(addBtn);
           cardImage.appendChild(cardImgElement)
           card.appendChild(cardImage);
          
@@ -225,7 +258,6 @@ function userInfoClicked() {
           carouselContainer.appendChild(carouselItem);
         }
       }
-
 
       for (var i = 0; i < usersToUpdate.length; i++) {
         var usersToUpdateID = usersToUpdate[i];
@@ -250,9 +282,19 @@ function userInfoClicked() {
           });
         });
       }
-
       $(".infoClose").on("click touchstart", closeInfo);
-      $("#userInfo").modal("open");
+      $(".hideUser").on("click touchstart", hideUser);
+      $(".addUser").on("click touchstart", addUser);
+      if (openModal) {
+        $("#userInfo").modal("open");
+      }
+
+      // var ch = $('.card').height();
+      // $(".card").css({'width':ch+'px'});
+
+      if(usersToUpdate.length < 1) {
+        $("#userInfo").modal("close");
+      }
     });
   }
 }
@@ -261,6 +303,37 @@ function closeInfo() {
   console.log("Test");
   $('#userInfo').modal('close');
 }
+
+function disableUser(passedThis) {
+  var userId = passedThis.dataset.userId;
+  var courseId = passedThis.dataset.courseId;
+  var index = passedThis.dataset.index;
+  if (index > 1) {
+    carouselIndex = index - 1;
+  } else {
+    carouselIndex = 0;
+  }
+  // $('#userInfo').modal('close');
+  db.ref("user_courses/" + courseId + "/" + uid + "/" + userId).set(true).then(function() {
+    $('.carousel.carousel-slider').carousel({
+        duration: 200,
+        fullWidth: true,
+        indicators: false,
+        noWrap: false,
+        padding: 200,
+    });
+    $('.carousel.carousel-slider').carousel("set", carouselIndex);
+  });
+}
+
+function hideUser() {
+  disableUser(this);
+}
+
+function addUser() {
+  disableUser(this);
+}
+
 
 $("#addCourseBtn").one("click", function() {
   db.ref('curriculum_search').once("value").then(function(snapshot) {
