@@ -148,3 +148,78 @@ textarea {
 .collection > .collection-item.avatar > p {
    font-size: 12px;
 }
+
+.carousel-fixed-item > a {
+   /*margin-top: 50%;*/
+}
+
+.carousel-fixed-item {
+   height: 100%;
+   top:50%;
+}
+
+.carousel.carousel-slider .carousel-fixed-item {
+   height: 100%;
+   bottom: 0;
+}
+
+.carousel.carousel-slider {
+   height:100%!important;
+}
+
+@media only screen and (max-width: 992px) {
+   #userInfo {
+      width: 95%;
+   }
+}
+
+.carousel-item > div {
+   margin-left: 10%;
+   margin-right: 10%
+}
+
+#userInfo {
+   height: 80%;
+   max-height: 80%;
+   background-color: unset;
+   -webkit-box-shadow: unset;
+   box-shadow: unset;
+}
+
+.modal > .modal-content {
+   height:100%;
+   padding: 0;
+}
+
+.carousel-item {
+   max-width: 80%;
+   margin-left: 10%;
+}
+
+@media only screen and (max-width: 601px) { 
+   .carousel-item {
+      max-width: 100%;
+      margin-left: 0;
+   }
+   .carousel-item > div {
+      margin-left: 5%;
+      margin-right: 5%;
+   }
+   #userInfo {
+       height: 98%;
+       max-height: 98%;
+       top:0!important;
+   }
+}
+
+.carousel-item > .card{
+   height: 100%;
+}
+
+.infoClose {
+   position: absolute;
+   right: 10px;
+   top: 10px;
+   z-index: 10;
+   cursor: pointer;
+}

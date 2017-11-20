@@ -96,6 +96,9 @@ function updateInfo() {
       blankValue = true;
       document.getElementById(key).classList.add("invalid");
     }
+    if (key == "bio" && info[key].length > 250) {
+      blankValue = true;
+    }
   }
   $('select').material_select();
   if (!blankValue) {

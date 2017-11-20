@@ -14,22 +14,26 @@ $(document).ready(function(){
       $("#autocomplete-input").val("");
       updateCourseTable(null, {});
     },
-    startingTop: '4%', // Starting top style attribute
-    endingTop: '5%', // Ending top style attribute
+    startingTop: '0%', // Starting top style attribute
+    endingTop: '0%', // Ending top style attribute
   });
   $('#confirmRemoveCourse').modal();
   $('#userInfo').modal({
     ready: function(modal, trigger) {
+      
+
       $('.carousel.carousel-slider').carousel({
+        duration: 200,
         fullWidth: true,
-        indicators: true,
-        noWrap: true,
-        onCycleTo: function (ele, dragged) {
-          console.log(ele);
-          console.log($(ele).index()); // the slide's index
-          console.log(dragged);
-        }
+        indicators: false,
+        noWrap: false,
+        // onCycleTo: function (ele, dragged) {
+        //   console.log(ele);
+        //   console.log($(ele).index()); // the slide's index
+        //   console.log(dragged);
+        // }
       });
+      $('.carousel.carousel-slider').carousel("set", carouselIndex);
     }
   });
 });
@@ -67,6 +71,7 @@ function authChange(uid, data) {
         collection.classList = "collection";
 
         var usersToUpdate = [];
+        index = 0;
         for (var userId in user_data) {
           if (userId != uid) {
             var avatarItem = document.createElement("li");
@@ -80,9 +85,12 @@ function authChange(uid, data) {
             var content = document.createElement("p");
             content.classList += " " + userId + "_content";
             var secondaryContent = document.createElement("a");
-            secondaryContent.classList = "secondary-content waves-effect waves-light btn-flat purple white-text modal-trigger"
-            secondaryContent.href = "#userInfo"
+            secondaryContent.classList = "secondary-content waves-effect waves-light btn-flat purple white-text"
             secondaryContent.innerHTML = "<span class='hide-on-small-only'>More </span>Info";
+            secondaryContent.dataset.classId = snapshot.key;
+            secondaryContent.dataset.userIndex = index;
+            index++;
+            secondaryContent.onclick = userInfoClicked;
             avatarItem.appendChild(img);
             avatarItem.appendChild(title);
             avatarItem.appendChild(content);
@@ -143,6 +151,115 @@ function updateSwitch(id, checked) {
     listElement.classList = "disabled not-collapse";
     $(listElement).on("click", function(e) { e.stopPropagation(); });
   }
+}
+
+var carouselIndex;
+function userInfoClicked() {
+  var cid = this.dataset.classId;
+  carouselIndex = this.dataset.userIndex;
+  if (cid in user_courses) {
+    db.ref('user_courses/' + cid).on('value', function(snapshot, cid) {
+      // console.log(snapshot.key, snapshot.val());
+      $('.carousel.carousel-slider').carousel("destroy");
+      $(".carousel-item").each(function(i) {
+        this.remove();
+      })
+      var user_data = snapshot.val();
+      var usersToUpdate = [];
+
+
+      var carouselContainer = document.getElementById("infoCarousel");
+      var index = 0;
+      for (var userId in user_data) {
+        if (userId != uid) {
+          usersToUpdate.push(userId);
+          console.log(userId);
+          var carouselItem = document.createElement("div");
+          carouselItem.href = "#one";
+          carouselItem.classList = "carousel-item";
+          if (index == carouselIndex) {
+            carouselItem.classList += " active";
+            console.log("Active");
+          }
+          index++;
+          var card = document.createElement("div");
+          card.classList = "card";
+          var cardImage = document.createElement("div");
+          cardImage.classList = "card-image";
+          var closeIconBtn = document.createElement("a");
+          closeIconBtn.classList = "infoClose btn-floating btn-large waves-effect waves-light red"
+          // closeIconBtn.onclick = closeInfo;
+          var closeIcon = document.createElement("i");
+          closeIcon.classList = "material-icons small right";
+          closeIcon.innerHTML = "close";
+          var cardImgElement = document.createElement("img");
+          cardImgElement.src = "defaultprofile.jpg";
+          cardImgElement.id = userId + "_img"
+
+          var cardContent = document.createElement("div");
+          cardContent.classList = "card-content";
+          var title = document.createElement("title");
+          title.classList = "card-title";
+          title.id = userId + "_title"
+          var year = document.createElement("h6");
+          year.id = userId + "_year";
+          var bio = document.createElement("p");
+          bio.classList = "flow-text";
+          bio.id = userId + "_bio";
+          // bio.innerHTML = "Nam luctus ultrices magna, non vulputate tortor tristique sit amet. Fusce id ex mauris. Integer sed eros ligula. Nam a nulla nec ipsum feugiat lobortis. Etiam consequat sem eu ipsum laoreet, non interdum arcu mollis. Quisque vitae dui tincidunt amet.";
+
+          closeIconBtn.appendChild(closeIcon)
+          cardImage.appendChild(closeIconBtn);
+          cardImage.appendChild(cardImgElement)
+          card.appendChild(cardImage);
+         
+          // title.appendChild(firstName);
+          // title.innerHTML += " ";
+          // title.appendChild(lastName);
+          cardContent.appendChild(title);
+          cardContent.appendChild(year);
+          cardContent.appendChild(bio);
+          card.appendChild(cardContent);
+
+          carouselItem.appendChild(card);
+          carouselContainer.appendChild(carouselItem);
+        }
+      }
+
+
+      for (var i = 0; i < usersToUpdate.length; i++) {
+        var usersToUpdateID = usersToUpdate[i];
+        db.ref("shared_data/public_data/" + usersToUpdateID).once("value").then(function(snapshot) {
+          var usersToUpdateID = snapshot.key;
+          var data = snapshot.val();
+          $("#" + usersToUpdateID + "_img").each(function() {
+            if (data["photoURL"]) {
+              this.src = data["photoURL"];
+            } else {
+              this.src = "defaultprofile.jpg"
+            }
+          });
+          $("#" + usersToUpdateID + "_title").each(function() {
+            this.innerHTML = data["first"] + " " + data["last"];
+          });
+          $("#" + usersToUpdateID + "_year").each(function() {
+            this.innerHTML = data["year"];
+          });
+          $("#" + usersToUpdateID + "_bio").each(function() {
+            this.innerHTML = data["bio"];
+          });
+        });
+      }
+
+      $(".infoClose").on("click touchstart", closeInfo);
+      $("#userInfo").modal("open");
+    });
+  }
+}
+
+function closeInfo() {
+  console.log("Test");
+  $('#userInfo').modal('close');
 }
 
 $("#addCourseBtn").one("click", function() {
