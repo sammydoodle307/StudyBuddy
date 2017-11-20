@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Study Buddies - Profile</title>
+    <meta name="description" content="Study Group Finder">
+    <meta name="author" content="Jack Venberg, Sam Bowen, Rachel Bernstein, Rahma Kamel, Veronica Chang">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/croppie.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body>
+    <!-- <div class="navbar-fixed"> -->
+      <nav>
+        <div class="nav-wrapper purple">
+          <a href="/"><img class="brand-logo" id="logo-img" src="logo.png"></a>
+          <a href="/" class="brand-logo" id="logo-text">Study Buddies</a>
+          <a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+          <ul class="right hide-on-med-and-down">
+            <li class="active"><a href="profile.html">Profile</a></li>
+            <li><a onClick="logout()">Logout</a></li>
+          </ul>
+          <ul class="side-nav" id="mobile-demo">
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="profile.html">Profile</a></li>
+            <li><a onClick="logout()">Logout</a></li>
+          </ul>
+        </div>
+      </nav>
+    <!-- </div> -->
+
+    <div class="row container">
+      <div class="col l5 m8 offset-m2 s12">
+        <div class="card">
+          <div class="card-image" id="profile-pic-container">
+            <img id="profile-pic" src="">
+          </div>
+          <div class="card-action">
+            <a href="#profile-modal" onclick="initCroppie()" class="text-black modal-trigger">Change Picture</a>
+          </div>
+
+          <div id="profile-modal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+              <div class="col s12" style="">
+                <div class="file-field input-field">
+                  <div class="btn">
+                    <span>File</span>
+                    <input type="file" id="upload" value="Choose a file" accept="image/*" "></div>
+                    <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text">
+                    </div>
+                  </div>
+              </div>
+
+              <div id="croppie-container" class="col s12">
+                <div id="upload-demo" style=""></div>
+                <div class="row">
+                  <div class="col m3 s6 offset-m3">
+                    <div class="rotate-btn btn center-align" onclick="uploadCrop.rotate(-90)">
+                      <i class="material-icons">rotate_left</i>
+                    </div>
+                  </div>
+                  <div class="col m3 s6">
+                    <div class="rotate-btn btn center-align" onclick="uploadCrop.rotate(90)">
+                      <i class="material-icons">rotate_right</i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+            </div>
+            <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+              <a href="#!" class="purple white-text modal-action modal-close waves-effect waves-green btn-flat upload-result">Upload</a>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+      <div class="col l7 s12">
+        <h5 class="center">Profile Page</h5>
+        <div class="card">
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab"><a class="active" href="#info">Profile Information</a></li>
+              <li class="tab"><a href="#settings">Settings</a></li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="info">
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="first" type="text" class="validate">
+                  <label for="first">First Name *</label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="last" type="text" class="validate">
+                  <label for="last">Last Name *</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m8 s12">
+                  <div class="input-field s12">
+                    <input disabled value="" id="email" type="email" class="validate">
+                    <label for="email">Email *</label>
+                  </div>
+                  <div class="input-field s12">
+                    <input value="" id="phone" type="tel" class="validate" onkeypress="return numberPressed(event)">
+                    <label for="phone">Phone Number *</label>
+                  </div>
+                </div>
+                <div class="col m4 s12">
+                  <label>Preferred Contact Method *</label>
+                  <form action="#" id="preferred">
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_email" value="pref_email" checked/>
+                      <label for="pref_email">Email</label>
+                    </p>
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_text" value="pref_text"/>
+                      <label for="pref_text">Text</label>
+                    </p>
+                    <p>
+                      <input class="with-gap" name="preferred" type="radio" id="pref_call" value="pref_call"/>
+                      <label for="pref_call">Call</label>
+                    </p>
+                  </form>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <select id="year" class="validate">
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="Freshman">Freshman</option>
+                    <option value="Sophmore">Sophmore</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Senior">Senior</option>
+                  </select>
+                  <label>Year *</label>
+                </div>
+              </div>
+              <div class="row">
+                 <div class="input-field col s12">
+                   <textarea id="major" class="materialize-textarea validate" data-length="30"></textarea>
+                   <label for="major">Major *</label>
+                 </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea id="bio" class="materialize-textarea validate" data-length="250"></textarea>
+                  <label for="bio">Biography *</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12">
+                  <label>* Required</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col l6 offset-l6 m5 offset-m7 s12">
+                  <div class="btn" id="update-info" onclick="updateInfo()">Update Info</div>
+                </div>
+              </div>
+            </div>
+            <div id="settings">Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="js/croppie.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
+</html>
